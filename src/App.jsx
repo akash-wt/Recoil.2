@@ -1,58 +1,32 @@
-import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
-import { networkAtom, jobAtom, notifficationAtom, messegeAtom,allCount } from "./atoms";
-import { memo } from "react";
 
+import { RecoilRoot, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { notifications, totalNotificationSelector } from './atoms'
 
 function App() {
-  return (
-    <RecoilRoot>
-      <MainApp />
-    </RecoilRoot>
-  );
+  return <RecoilRoot>
+    <MainApp />
+  </RecoilRoot>
 }
 
+
+
+
 function MainApp() {
-  const networkCount = useRecoilValue(networkAtom);
-  const jobCount = useRecoilValue(jobAtom);
-  const notificationkCount = useRecoilValue(notifficationAtom);
-  const meassegeCount = useRecoilValue(messegeAtom);
-  const allCounts=useRecoilValue(allCount)
+  const [networkCount, setNetworkCount] = useRecoilState(notifications)
+  const totalNotificationCount = useRecoilValue(totalNotificationSelector);
 
   return (
     <>
       <button>Home</button>
-      <button>My network ({networkCount >= 100 ? "99+" : networkCount})</button>
-      <button>Jobs ({jobCount >= 100 ? "99+" : jobCount})</button>
-      <button>
-        Notifications ({notificationkCount >= 100 ? "99+" : notificationkCount})
-      </button>
+      
+      <button>My network ({networkCount.networks >= 100 ? "99+" : networkCount.networks})</button>
+      <button>Jobs {networkCount.jobs}</button>
+      <button>Messaging ({networkCount.messaging})</button>
+      <button>Notifications ({networkCount.notifications})</button>
 
-      <button>
-        {" "}
-        Messeging ({meassegeCount >= 100 ? "99+" : meassegeCount})
-      </button>
-      <button>Me ({allCounts})</button>
-      <br />
-
-      <UpdateJobs />
+      <button>Me ({totalNotificationCount})</button>
     </>
-  );
+  )
 }
 
-const UpdateJobs = memo(() => {
-  const setJobState = useSetRecoilState(jobAtom);
-
-  console.log("re-render");
-
-  return (
-    <button
-      onClick={() => {
-        setJobState((c) => (c += 1));
-      }}
-    >
-      {" "}
-      Update Job
-    </button>
-  );
-});
-export default App;
+export default App
